@@ -10,7 +10,7 @@ const SETS = [
   {id:'OP17',code:'OPC-17',name:'最强斗士',type:'main'},
   {id:'EB01',code:'EB-01',name:'Extra Booster 01',type:'special'},{id:'EB02',code:'EB-02',name:'Anime 25th Collection',type:'special'},
   {id:'EB03',code:'EB-03',name:'Extra Booster 03',type:'special'},{id:'EB04',code:'EB-04',name:'Extra Booster 04',type:'special'},
-  {id:'PRB01',code:'PRB-01',name:'历代典藏合集',type:'special'}
+  {id:'PRB01',code:'PRB-01',name:'历代典藏合集',type:'special'},{id:'PRB02',code:'PRB-02',name:'豪华补充包 02',type:'special'}
 ];
 const setButtons=document.querySelector('#setButtons'),cardsGrid=document.querySelector('#cardsGrid'),emptyState=document.querySelector('#emptyState'),setName=document.querySelector('#setName'),cardCount=document.querySelector('#cardCount'),lightbox=document.querySelector('#lightbox'),lightboxImage=document.querySelector('#lightboxImage'),lightboxLabel=document.querySelector('#lightboxLabel');
 let cardData={};
