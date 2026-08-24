@@ -38,20 +38,35 @@ jobs:
       - name: Download official card images locally
         run: python tools/download_images.py
 
-      - name: Show scrape result
+      - name: Show final card and image result
         run: |
-          echo '===== OPCG SCRAPER RESULT ====='
+          echo '===== FINAL CARD IMAGE RESULT ====='
           python - <<'PY'
           import json
           from pathlib import Path
           p = Path('data/cards.json')
-          data = json.loads(p.read_text(encoding='utf-8')) if p.exists() else {}
+          if not p.exists():
+              print('ERROR: data/cards.json was not created')
+              raise SystemExit(1)
+          data = json.loads(p.read_text(encoding='utf-8'))
           total = sum(len(v) for v in data.values())
           local = sum(1 for v in data.values() for c in v if c.get('localImage'))
+          missing = total - local
           print(f'TOTAL CARDS: {total}')
           print(f'LOCAL IMAGES: {local}')
-          for key, cards in data.items():
-              print(f'{key}: {len(cards)} cards / {sum(1 for c in cards if c.get("localImage"))} local images')
+          print(f'MISSING IMAGES: {missing}')
+          print('')
+          for key in data:
+              cards = data[key]
+              count = len(cards)
+              images = sum(1 for c in cards if c.get('localImage'))
+              print(f'{key}: {count} cards / {images} local images')
+          if total == 0:
+              print('ERROR: No cards were detected.')
+              raise SystemExit(1)
+          if local == 0:
+              print('ERROR: No card images were downloaded.')
+              raise SystemExit(1)
           PY
 
       - name: Upload scraper diagnostics
@@ -68,11 +83,16 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/cards.json debug/page.html debug/network.json debug/image-download-failures.json images/ || true
+
+          git add data/cards.json
+          if [ -d images ]; then git add images/; fi
+          if [ -d debug ]; then git add debug/; fi
+
           if git diff --cached --quiet; then
             echo 'No card-data or image changes to commit.'
             exit 0
           fi
+
           git commit -m 'chore: update official OPCG card data and images'
           git fetch origin main
           git rebase origin/main
