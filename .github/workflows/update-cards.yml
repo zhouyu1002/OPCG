@@ -35,6 +35,9 @@ jobs:
       - name: Scrape official card list
         run: python tools/scrape_official_v2.py
 
+      - name: Download official card images locally
+        run: python tools/download_images.py
+
       - name: Show scrape result
         run: |
           echo '===== OPCG SCRAPER RESULT ====='
@@ -44,9 +47,11 @@ jobs:
           p = Path('data/cards.json')
           data = json.loads(p.read_text(encoding='utf-8')) if p.exists() else {}
           total = sum(len(v) for v in data.values())
-          print(f'TOTAL: {total}')
+          local = sum(1 for v in data.values() for c in v if c.get('localImage'))
+          print(f'TOTAL CARDS: {total}')
+          print(f'LOCAL IMAGES: {local}')
           for key, cards in data.items():
-              print(f'{key}: {len(cards)}')
+              print(f'{key}: {len(cards)} cards / {sum(1 for c in cards if c.get("localImage"))} local images')
           PY
 
       - name: Upload scraper diagnostics
@@ -59,16 +64,16 @@ jobs:
             debug/
           if-no-files-found: warn
 
-      - name: Commit updated card data
+      - name: Commit updated card data and images
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/cards.json debug/page.html debug/network.json
+          git add data/cards.json debug/page.html debug/network.json debug/image-download-failures.json images/ || true
           if git diff --cached --quiet; then
-            echo 'No card-data changes to commit.'
+            echo 'No card-data or image changes to commit.'
             exit 0
           fi
-          git commit -m 'chore: update official OPCG card data'
+          git commit -m 'chore: update official OPCG card data and images'
           git fetch origin main
           git rebase origin/main
           git push origin HEAD:main
