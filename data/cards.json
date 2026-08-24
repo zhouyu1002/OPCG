@@ -19,47 +19,56 @@
     {
       "id": "OP17-001",
       "name": "",
-      "image": "https://source.windoent.com/OnePiecePc/Picture/8fd0e304591a4b6db8d06582486232f4.png"
+      "image": "https://source.windoent.com/OnePiecePc/Picture/8fd0e304591a4b6db8d06582486232f4.png",
+      "localImage": "images/OP17/OP17-001.png"
     },
     {
       "id": "OP17-002",
       "name": "",
-      "image": "https://source.windoent.com/OnePiecePc/Picture/92d9ffe9fa6c44218df095b837a4e444.png"
+      "image": "https://source.windoent.com/OnePiecePc/Picture/92d9ffe9fa6c44218df095b837a4e444.png",
+      "localImage": "images/OP17/OP17-002.png"
     },
     {
       "id": "OP17-003",
       "name": "",
-      "image": "https://source.windoent.com/OnePiecePc/Picture/6f90026510fe4ec4bb025c5132291bef.png"
+      "image": "https://source.windoent.com/OnePiecePc/Picture/6f90026510fe4ec4bb025c5132291bef.png",
+      "localImage": "images/OP17/OP17-003.png"
     },
     {
       "id": "OP17-004",
       "name": "",
-      "image": "https://source.windoent.com/OnePiecePc/Picture/d41deade6f7f49c493dea54a7b55094c.png"
+      "image": "https://source.windoent.com/OnePiecePc/Picture/d41deade6f7f49c493dea54a7b55094c.png",
+      "localImage": "images/OP17/OP17-004.png"
     },
     {
       "id": "OP17-005",
       "name": "",
-      "image": "https://source.windoent.com/OnePiecePc/Picture/6e79cc8ce17d4efda1df864c57673ce7.png"
+      "image": "https://source.windoent.com/OnePiecePc/Picture/6e79cc8ce17d4efda1df864c57673ce7.png",
+      "localImage": "images/OP17/OP17-005.png"
     },
     {
       "id": "OP17-006",
       "name": "",
-      "image": "https://source.windoent.com/OnePiecePc/Picture/af0342ffa19c4089ad9f1856d26b888e.png"
+      "image": "https://source.windoent.com/OnePiecePc/Picture/af0342ffa19c4089ad9f1856d26b888e.png",
+      "localImage": "images/OP17/OP17-006.png"
     },
     {
       "id": "OP17-007",
       "name": "",
-      "image": "https://source.windoent.com/OnePiecePc/Picture/c7d3873d9d6640c6a4150a7c1bd92edf.png"
+      "image": "https://source.windoent.com/OnePiecePc/Picture/c7d3873d9d6640c6a4150a7c1bd92edf.png",
+      "localImage": "images/OP17/OP17-007.png"
     },
     {
       "id": "OP17-008",
       "name": "",
-      "image": "https://source.windoent.com/OnePiecePc/Picture/e6ce8be0ffec4399a78e986c1e6a8b7f.png"
+      "image": "https://source.windoent.com/OnePiecePc/Picture/e6ce8be0ffec4399a78e986c1e6a8b7f.png",
+      "localImage": "images/OP17/OP17-008.png"
     },
     {
       "id": "OP17-009",
       "name": "",
-      "image": "https://source.windoent.com/OnePiecePc/Picture/6dd1a3799b4646b0a20baabde1161b1d.png"
+      "image": "https://source.windoent.com/OnePiecePc/Picture/6dd1a3799b4646b0a20baabde1161b1d.png",
+      "localImage": "images/OP17/OP17-009.png"
     }
   ],
   "EB01": [],
