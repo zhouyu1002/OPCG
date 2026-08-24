@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OPCG 簡中版卡片圖鑑</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <div class="eyebrow">ONE PIECE CARD GAME</div>
+      <h1>OPCG 簡中版卡片圖鑑</h1>
+      <p>選擇彈數，一頁瀏覽該彈所有卡片圖片。</p>
+    </div>
+    <div class="stats">
+      <span id="setName">尚未選擇</span>
+      <strong id="cardCount">0 張</strong>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="set-panel">
+      <div class="section-title">
+        <h2>選擇彈數</h2>
+        <button id="topButton" class="ghost" type="button">回到頂端</button>
+      </div>
+      <div id="setButtons" class="set-buttons"></div>
+    </section>
+
+    <section id="cardsSection" class="cards-panel">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">🏴‍☠️</div>
+        <h2>請選擇一個彈數</h2>
+        <p>例如點選 OP01，就會顯示 OP01 的全部卡片。</p>
+      </div>
+      <div id="cardsGrid" class="cards-grid" hidden></div>
+    </section>
+  </main>
+
+  <div id="lightbox" class="lightbox" hidden>
+    <button id="closeLightbox" class="close" type="button" aria-label="關閉">×</button>
+    <img id="lightboxImage" alt="卡片大圖">
+    <div id="lightboxLabel" class="lightbox-label"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
