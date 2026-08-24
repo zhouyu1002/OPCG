@@ -12,14 +12,19 @@ all_data = {s: [] for s in SETS}
 seen = set()
 responses = []
 
-CARD_RE = re.compile(r'\b((?:OP|EB|PRB)[-_ ]?\d{2}[-_ ]?\d{3}[A-Z]?)\b', re.I)
+# The official Chinese site uses OPC-xx / EBC-xx / PRBC-xx in its
+# offering names and card numbers. Normalize those to our display IDs.
+CARD_RE = re.compile(r'\b((?:OPC|EBC|PRBC)[-_ ]?\d{2}[-_ ]?\d{3}[A-Z]?|(?:OP|EB|PRB)[-_ ]?\d{2}[-_ ]?\d{3}[A-Z]?)\b', re.I)
 IMG_RE = re.compile(r'\.(?:jpg|jpeg|png|webp)(?:[?#].*)?$', re.I)
 
 def normalize_id(value):
     m = CARD_RE.search(str(value or ''))
     if not m:
         return None
-    return m.group(1).upper().replace('_','-').replace(' ','-')
+    raw = m.group(1).upper().replace('_','-').replace(' ','-')
+    raw = re.sub(r'-+', '-', raw)
+    raw = raw.replace('OPC-', 'OP').replace('EBC-', 'EB').replace('PRBC-', 'PRB')
+    return raw
 
 def set_for(cid):
     return next((s for s in SETS if cid.startswith(s + '-')), None)
@@ -40,7 +45,8 @@ def inspect_json(obj):
         cid = None
         for v in strings:
             cid = normalize_id(v)
-            if cid: break
+            if cid:
+                break
         image = None
         for v in strings:
             sv = str(v)
@@ -50,8 +56,12 @@ def inspect_json(obj):
         if cid and image:
             name = ''
             for k,v in obj.items():
-                if str(k).lower() in {'name','cardname','card_name','title','cardtitle','cardnamecn','card_name_cn'}:
-                    name = v; break
+                if str(k).lower() in {
+                    'name','cardname','card_name','title','cardtitle','cardnamecn',
+                    'card_name_cn','cardnamezh','card_name_zh'
+                }:
+                    name = v
+                    break
             add_card(cid, name, image)
         for v in values:
             inspect_json(v)
@@ -76,7 +86,8 @@ with sync_playwright() as p:
         try:
             ct = r.headers.get('content-type','').lower()
             if 'json' in ct:
-                inspect_json(r.json())
+                body = r.json()
+                inspect_json(body)
         except Exception:
             pass
 
@@ -84,13 +95,14 @@ with sync_playwright() as p:
     page.goto('https://www.onepiece-cardgame.cn/cardlist', wait_until='domcontentloaded', timeout=120000)
     page.wait_for_timeout(5000)
 
-    # Trigger lazy-loaded content and inspect the rendered DOM.
+    # The official site initially selects the newest set. Scroll to trigger
+    # lazy-loaded images, while Network interception captures the full API JSON.
     for _ in range(20):
         page.mouse.wheel(0, 1800)
-        page.wait_for_timeout(700)
+        page.wait_for_timeout(500)
 
-    # Collect every rendered image and nearby text. This is intentionally broad
-    # because the official site's frontend structure can change independently.
+    # The rendered DOM is a fallback for image URLs. The API response is the
+    # authoritative source for card numbers and set membership.
     imgs = page.locator('img')
     for i in range(imgs.count()):
         el = imgs.nth(i)
@@ -99,24 +111,9 @@ with sync_playwright() as p:
             if not src:
                 continue
             src = urljoin(page.url, src)
-            alt = el.get_attribute('alt') or ''
-            parent_text = el.locator('xpath=..').inner_text(timeout=1000)
-            text = f'{alt} {parent_text}'
-            cid = normalize_id(text)
-            if not cid:
-                # Search a few ancestor levels for the card number.
-                for level in range(2,5):
-                    try:
-                        t = el.locator('xpath=' + '/..'*level).inner_text(timeout=500)
-                        cid = normalize_id(t)
-                        if cid:
-                            text = t
-                            break
-                    except Exception:
-                        pass
-            if cid and (src.startswith('http') or src.startswith('//')):
-                name = text.replace(cid, '').strip(' |｜-\n\t')[:200]
-                add_card(cid, name, src)
+            text = el.get_attribute('alt') or ''
+            if cid := normalize_id(text):
+                add_card(cid, '', src)
         except Exception:
             pass
 
